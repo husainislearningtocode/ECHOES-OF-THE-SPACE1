@@ -1,0 +1,136 @@
+/* ECHOES OF SPACE: cinematic intro. Loaded after style.css (reuses its colour variables and chamfered "low-poly" look). */
+#iRoot,#iRoot *{font-family:var(--font)!important}
+#iRoot{position:fixed;inset:0;z-index:60;pointer-events:none;color:#fff;transition:opacity 1.2s ease-in-out}
+#iRoot[hidden]{display:none}
+#iRoot.out{opacity:0}
+#iBlack{position:absolute;inset:0;background:#000;transition:opacity 4s ease-in-out}
+#iSpace{position:absolute;inset:0;width:100%;height:100%;display:block}
+#iBlack::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 52%,rgba(0,0,0,.55),rgba(0,0,0,0) 100%)}   /* keeps the title and buttons easy to read over the stars */
+#iBlack.off{opacity:0}
+
+/* 1. opening screen: logos + title on pure black */
+#iOpen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,26px);
+  padding:0 16px;text-align:center;transition:opacity 2.4s ease-in-out}
+#iOpen.out{opacity:0}
+/* logo strip: a white band across the full screen width, about 10% of the screen height */
+.iCard{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:clamp(24px,8vw,120px);
+  width:100vw;height:clamp(64px,10vh,140px);padding:0 4vw;background:#fff;color:#000;
+  border-block:3px solid var(--red);box-shadow:0 0 60px rgba(252,61,33,.45);animation:iUp 1s ease-out both}
+.iCard figure{height:100%;margin:0;padding:clamp(8px,1.5vh,16px) 0;display:grid;place-items:center}
+.iCard img{height:100%;width:auto;max-width:40vw;object-fit:contain;display:block}
+.iCard b{font-size:clamp(15px,2.6vw,22px);color:#000}
+.iDiv{width:2px;height:60%;background:rgba(0,0,0,.25)}
+.iCard::after{content:'';position:absolute;top:0;bottom:0;left:0;width:28%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(252,61,33,.38) 50%,transparent);transform:translateX(-130%) skewX(-20deg)}
+#iOpen.fx .iCard::after{animation:fxFlare .9s ease-in-out .15s both}
+@keyframes fxFlare{to{transform:translateX(480%) skewX(-20deg)}}
+
+/* VFX layer (quick, about 1.5 s): shock rings, a scan line, sparks, a glitch on the title */
+#iFx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.fxSweep{position:absolute;left:0;right:0;top:0;height:3px;background:#fff;opacity:0;
+  box-shadow:0 0 24px 6px rgba(252,61,33,.9),0 0 90px 30px rgba(252,61,33,.35)}
+#iOpen.fx .fxSweep{animation:fxSweep .9s ease-in both}
+@keyframes fxSweep{0%{opacity:1;transform:translateY(-10px)}100%{opacity:0;transform:translateY(100vh)}}
+#iFx i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);background:#fff;opacity:0;box-shadow:0 0 10px 2px var(--red);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+#iOpen.fx #iFx i{animation:fxSpark .9s cubic-bezier(.1,.7,.3,1) both}
+@keyframes fxSpark{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--x),var(--y))}}
+#iOpen.fx #iName{animation:iGlitch .7s steps(1) both}
+@keyframes iGlitch{
+  0%{transform:translateX(-9px);text-shadow:7px 0 #fc3d21,-7px 0 #fff;clip-path:inset(10% 0 55% 0)}
+  18%{transform:translateX(8px);text-shadow:-6px 0 #fc3d21,6px 0 #fff;clip-path:inset(50% 0 8% 0)}
+  36%{transform:translateX(-5px);text-shadow:4px 0 #fc3d21,-4px 0 #fff;clip-path:inset(0 0 0 0)}
+  54%{transform:translateX(4px);text-shadow:-3px 0 #fc3d21,3px 0 #fff}
+  72%{transform:translateX(-2px);text-shadow:2px 0 #fc3d21,-2px 0 #fff}
+  100%{transform:none;text-shadow:0 0 22px rgba(252,61,33,.65),0 0 60px rgba(252,61,33,.35);clip-path:inset(0 0 0 0)}}
+#iName{font-weight:800;font-size:clamp(28px,5.6vw,88px);line-height:1.05;letter-spacing:.1em;margin-right:-.1em;max-width:96vw;
+  text-shadow:0 0 22px rgba(252,61,33,.65),0 0 60px rgba(252,61,33,.35);animation:iWide 1.5s cubic-bezier(.2,.7,.2,1) .35s both}
+#iSub{font-weight:700;font-size:clamp(14px,2.2vw,20px);letter-spacing:.08em;color:var(--regolith);animation:iUp .9s ease-out .9s both}
+#iGo{margin-top:6px;cursor:pointer;border:0;padding:15px 36px;font-size:clamp(17px,2.8vw,22px);font-weight:900;letter-spacing:.02em;
+  color:#fff;background:linear-gradient(135deg,#fc3d21 0 50%,#d92f16 50%);pointer-events:auto;transition:opacity 1s;
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);animation:iUp .8s ease-out 1.3s both,iPulse 2.4s ease-in-out 2.4s infinite}
+#iGo:hover{filter:brightness(1.12)}
+#iGo.gone,#iGoShort.gone{opacity:0;pointer-events:none;animation:none}
+#iGoRow{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+#iGoRow #iGo{margin-top:0}
+#iGoShort{cursor:pointer;border:0;padding:15px 28px;font-size:clamp(15px,2.4vw,19px);font-weight:800;color:#fff;background:#0a0a0a;
+  box-shadow:inset 0 0 0 2px var(--red);pointer-events:auto;transition:opacity 1s;
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);animation:iUp .8s ease-out 1.5s both}
+#iGoShort:hover{background:var(--red)}
+#iFoot{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));font-size:clamp(11px,1.6vw,14px);color:var(--regolith);opacity:.8;padding:0 16px}
+@keyframes iUp{from{opacity:0;transform:translateY(24px)}}
+@keyframes iWide{from{opacity:0;letter-spacing:.55em}}
+@keyframes iPulse{50%{transform:scale(1.05);filter:brightness(1.2) drop-shadow(0 0 14px #fc3d21)}}
+
+/* 2. story lines on pitch black */
+#iStory{position:absolute;left:50%;top:50%;width:min(900px,88vw);text-align:center;font-weight:800;font-size:clamp(24px,4.4vw,50px);line-height:1.28;
+  transform:translate(-50%,-46%);opacity:0;transition:opacity 1s ease-in-out,transform 3.5s ease-out;text-shadow:0 2px 24px rgba(0,0,0,.9)}
+#iStory.on{opacity:1;transform:translate(-50%,-50%)}
+#iRoot.nocap #iStory{display:none}
+
+/* 3. machine tour HUD */
+#iBottom{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:0 16px max(20px,env(safe-area-inset-bottom))}
+#iMach{min-height:1.4em;font-weight:700;font-size:clamp(15px,2.2vw,21px);color:var(--signal);text-shadow:0 2px 12px #000}
+#iYear{font-weight:900;font-size:clamp(46px,11vw,104px);line-height:1;color:var(--dust);font-variant-numeric:tabular-nums;
+  text-shadow:0 0 28px rgba(252,61,33,.6);opacity:0;transition:opacity 1.2s ease-in-out}
+#iYear.on{opacity:1}
+#iCap{max-width:920px;padding:10px 18px;font-weight:700;font-size:clamp(17px,2.6vw,27px);line-height:1.3;text-align:center;color:#fff;
+  background:rgba(0,0,0,.86);box-shadow:inset 0 0 0 1px var(--line),inset 3px 0 0 var(--red);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+#iCap:empty,#iRoot.nocap #iCap{display:none}
+
+/* controls */
+#iCtl{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;left:14px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;align-items:center;pointer-events:auto}
+#iCtl button{cursor:pointer;border:0;padding:8px 16px;font-weight:700;background:var(--facets);box-shadow:inset 0 0 0 2px var(--line);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+#iCtl button:hover{box-shadow:inset 0 0 0 2px var(--red)}
+#iCtl label{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--regolith)}
+#iVol{width:90px;accent-color:var(--signal)}
+
+/* while the intro runs: hide the normal UI, lock the 3D canvas */
+body.intro header,body.intro .tag,body.intro #tip,body.intro #toast,body.intro #hint,body.intro #fleet,
+body.intro #back,body.intro #panel,body.intro #timeline,body.intro #replay{visibility:hidden;opacity:0}
+body.intro #scene{pointer-events:none}
+@keyframes iIn{from{opacity:0}}
+body.intro-in header,body.intro-in .tag,body.intro-in #hint,body.intro-in #fleet,body.intro-in #timeline,body.intro-in #replay{animation:iIn 1.8s ease-in-out}
+
+#replay{position:fixed;top:24px;right:24px;cursor:pointer;border:0;padding:8px 18px;background:var(--facets);box-shadow:inset 0 0 0 2px var(--line);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+#replay:hover{box-shadow:inset 0 0 0 2px var(--red)}
+#replay[hidden],#back.on~#replay,body.story #replay{display:none}
+
+@media (max-width:600px){#iVol{width:70px}#iCtl button{padding:7px 12px}}
+@media (prefers-reduced-motion:reduce){#iStory{transform:translate(-50%,-50%)}}
+
+/* second replay button: the 12-second version */
+#replayShort{position:fixed;top:24px;right:170px;cursor:pointer;border:0;padding:8px 18px;background:var(--facets);box-shadow:inset 0 0 0 2px var(--line);
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+#replayShort:hover{box-shadow:inset 0 0 0 2px var(--red)}
+#replayShort[hidden],#back.on~#replayShort,body.story #replayShort{display:none}
+body.intro #replayShort{visibility:hidden;opacity:0}
+body.intro-in #replayShort{animation:iIn 1.8s ease-in-out}
+
+/* ===== v2 ===== */
+/* logo strip: pinned to the very top of the screen; logos are scaled to fit INSIDE the white band, never cropped or overflowing */
+#iOpen .iCard{position:absolute;top:0;left:0;box-sizing:border-box;border-top:0;padding:0 4vw;animation:iDown .9s ease-out both}
+.iCard figure{flex:0 1 auto;min-width:0;height:100%;box-sizing:border-box;padding:clamp(8px,1.6vh,18px) 0;display:flex;align-items:center;justify-content:center}
+.iCard img{height:auto;width:auto;max-width:100%;max-height:100%;object-fit:contain}
+@keyframes iDown{from{opacity:0;transform:translateY(-100%)}}
+
+/* quick intro: punchy VFX (flash, speed lines, number and caption pop) */
+#iFlash{position:absolute;inset:0;pointer-events:none;opacity:0;background:#fff;mix-blend-mode:screen}
+#iFlash.go{animation:iFlash .45s ease-out}
+@keyframes iFlash{0%{opacity:.5;background:#fff}35%{opacity:.22;background:#fc3d21}100%{opacity:0}}
+#iLines{position:absolute;inset:-25%;pointer-events:none;opacity:0;
+  background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0) 0 2.2deg,rgba(255,255,255,.3) 2.4deg 2.7deg,rgba(255,255,255,0) 2.9deg 5.1deg);
+  -webkit-mask:radial-gradient(circle at 50% 50%,transparent 24%,#000 72%);mask:radial-gradient(circle at 50% 50%,transparent 24%,#000 72%)}
+#iLines.go{animation:iLines .5s ease-out}
+@keyframes iLines{0%{opacity:.85;transform:scale(.55)}100%{opacity:0;transform:scale(1.7)}}
+#iCap.pop,#iYear.pop{animation:iPop .38s cubic-bezier(.2,1.5,.4,1)}
+@keyframes iPop{0%{transform:scale(1.45);filter:brightness(2.2)}100%{transform:none;filter:none}}
+#iRoot.quick #iOpen{transition-duration:1.2s}
+#iRoot.quick #iBlack{transition-duration:2.4s}
+#iRoot.quick #iYear{font-size:clamp(64px,15vw,150px)}
+#iRoot.quick #iMach{font-size:clamp(16px,2.6vw,26px)}
+@media (prefers-reduced-motion:reduce){#iFlash.go,#iLines.go,#iCap.pop,#iYear.pop{animation:none}}

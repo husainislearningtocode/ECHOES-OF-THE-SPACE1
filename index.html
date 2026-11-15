@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Echoes of Space</title>
+<meta name="theme-color" content="#000000">
+<!-- FONT: Montserrat from Google Fonts. Offline? Put assets/fonts/Montserrat-Variable.woff2 (or .ttf) next to it and it is used instead. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="intro.css">   <!-- INTRO -->
+<link rel="stylesheet" href="gate.css">    <!-- GATE: sci-fi loading doors -->
+</head>
+<body>
+<!-- GATE: sealed from the very first paint; gate.js fills the ring with real loading progress, then opens the doors -->
+<div id="gate" role="status" aria-live="polite" aria-label="Loading Echoes of Space">
+  <div class="gWrap">
+    <div class="gBloom"></div>
+    <div class="gDoor gL"><b>ECHOES</b></div>
+    <div class="gDoor gR"><b>OF SPACE</b></div>
+    <div class="gSeam"></div>
+    <div class="gBolt t"></div><div class="gBolt b"></div>
+    <div class="gScan"></div>
+    <div class="gHud"><span>Echoes of Space <i>//</i> Access control</span><span>Blast door <i>&#9679;</i> <span class="gState">Sealed</span></span></div>
+    <div class="gCore">
+      <svg class="gRing" viewBox="0 0 220 220" aria-hidden="true">
+        <circle class="gR1" cx="110" cy="110" r="107"/>
+        <circle class="gR2" cx="110" cy="110" r="92"/>
+        <g class="gTicks"></g>
+        <circle class="gTrack" cx="110" cy="110" r="80"/>
+        <circle class="gArc" cx="110" cy="110" r="80" pathLength="100" transform="rotate(-90 110 110)"/>
+      </svg>
+      <div class="gPct"><b>0</b><span>%</span></div>
+    </div>
+    <div class="gText"><b class="gTitle">Echoes of Space</b><span class="gStatus">Establishing link</span><small class="gItem"></small></div>
+  </div>
+</div>
+
+<canvas id="scene" aria-label="3D view of Mars, the Moon and the machines NASA left behind"></canvas>
+
+<header>
+  <h1>Echoes of space</h1>
+  <p>Abandoned but not forgotten. Drag the timeline to wake the machines NASA left behind.</p>
+</header>
+
+<div class="tag" id="tagMars">Mars</div>
+<div class="tag" id="tagMoon">The Moon</div>
+<div class="tag" id="tagSpace">Deep space</div>
+<div id="tip" role="presentation"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="hint">Press play or drag the slider to begin. Drag the sky to look around: the Sun and planets are out there.</div>
+
+<nav id="fleet" aria-label="Machines that are awake"></nav>
+<button id="back" type="button">Back to space</button>
+
+<aside id="panel" aria-label="Mission details">
+  <button id="close" type="button" aria-label="Close details">&times;</button>
+  <span id="pChip" class="chip"></span>
+  <h2 id="pTitle"></h2>
+  <p id="pMeta" class="meta"></p>
+
+  <button id="watch" class="watch" type="button" hidden>&#9654; Watch the mission story</button>
+
+  <!-- ANIMATION PREVIEW: a still from the story, click to play -->
+  <button id="preview" class="video" type="button" aria-label="Play the animated mission story"><img id="pvImg" alt=""></button>
+
+  <!-- GALLERY: images for this machine, from assets/gallery.json (each one a URL or a file in assets/images/) -->
+  <div id="gallery" hidden><h3>Gallery</h3><div id="gList"></div></div>
+
+  <p id="pBlurb"></p>
+  <h3>How it worked</h3>
+  <p id="pHow"></p>
+  <h3>Key facts</h3>
+  <ul id="pFacts"></ul>
+  <a id="pSrc" target="_blank" rel="noopener">Read the NASA source</a>
+</aside>
+
+<div id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button id="lbX" type="button" aria-label="Close image">&times;</button>
+  <button id="lbPrev" type="button" aria-label="Previous image">&#8249;</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button id="lbNext" type="button" aria-label="Next image">&#8250;</button>
+</div>
+
+<footer id="timeline">
+  <div class="yearbox">
+    <div id="year">1960</div>
+    <div id="count">0 machines awake</div>
+  </div>
+  <button id="play" type="button" aria-label="Play the timeline">&#9654;</button>
+  <div class="track">
+    <div id="ticks" aria-hidden="true"></div>
+    <input id="slider" type="range" min="1960" max="2026" value="1960" step="1" aria-label="Year">
+  </div>
+  <label class="mode"><input type="checkbox" id="only"> Only this year</label>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>   <!-- optional: lets Draco-compressed .glb files load -->
+<section id="story" hidden aria-label="Mission story">
+  <div id="sFade"></div>
+  <div id="sTitleBox"><small id="sKick"></small><b id="sTitle"></b></div>
+  <div id="sEnd" role="status"></div>
+  <p id="sChap"></p>   <!-- chapter description: top left -->
+  <button id="sX" type="button" aria-label="Close the story">&times; Close</button>   <!-- top right -->
+  <div id="sHud">
+    <p id="sCap" role="status" aria-live="polite"></p>
+    <div id="sBar" role="progressbar" aria-label="Story progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="sFill"></div></div>
+    <div id="sCtl">
+      <button id="sPlay" type="button" aria-label="Play">&#9654;</button>
+      <button id="sRe" type="button">Restart</button>
+      <button id="sSkip" type="button">Next chapter</button>
+      <button id="sSnd" type="button" aria-pressed="false">Sound on</button>
+    </div>
+    <p id="sNote"></p>
+  </div>
+</section>
+
+<script src="app.js"></script>
+<script src="gate.js"></script>    <!-- GATE (after app.js, before intro.js so it sees keys first) -->
+<script src="story.js"></script>
+<script src="intro.js"></script>   <!-- INTRO (must come last) -->
+</body>
+</html>
